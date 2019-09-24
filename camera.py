@@ -6,8 +6,6 @@ import time
 import operator
 from PhotoReq import PhotoReq
 
-#Initialize dictionary of string to list of string. Key is photo id, value is list containing time and camera.
-
 #Replace this with priority queue
 request_list = []
 
@@ -88,15 +86,15 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
         request_list.sort(key=operator.attrgetter('_date'))
     else:
         pass
-
-def thread_callback():
+    
+def main():
     read_txt()
-    time.sleep(0.5)
+    time.sleep(1)
     try_capture()
-    
-if __name__ == "__main__":
-    threading.Timer(1.0, thread_callback).start()
-    
+    threading.Timer(1.0, main).start()
+
+main()
+
         
 
 
