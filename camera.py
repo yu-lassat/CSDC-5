@@ -8,6 +8,7 @@ from PhotoReq import PhotoReq
 
 #Replace this with priority queue
 request_list = []
+complete_list = []
 
 def capture(photo_id: int) -> None:
     '''Capture an image using the raspberry pi camera. Will not work unless picamera module installed.'''
@@ -22,11 +23,15 @@ def capture(photo_id: int) -> None:
     #Save image to file path specified as argument to capture.
     '''camera.capture(f'foo/bar/{photo_id}.jpg')'''
     for request in request_list:
-        if request._id == photo_id:
-            request_list.remove(request)
+        if request._id == photo_id and request._is_complete == False:
+            request._is_complete = True
 
-    write_txt(photo_id, is_photo= True)
+            write_txt(photo_id, is_photo= True)
 
+    
+    for request in request_list:
+        if request._is_complete == True:
+            complete_list.append(request)
 
 def read_txt() -> None:
     '''
@@ -58,10 +63,12 @@ def write_txt(photo_id: int, is_photo: bool) -> None:
 def try_capture() -> None:
     '''Checks if a picture should be taken every second'''
     #Replace this for loop with priority queue[0]
-    print(request_list[0]._date)
     if len(request_list) > 0:
-        if request_list[0]._date <= datetime.datetime.now():
-            capture(request_list[0]._id)
+        for request in request_list:
+            if request._is_complete == False:
+                if request._date <= datetime.datetime.now():
+                    capture(request._id)
+                    break
     else: 
         pass
 
@@ -82,14 +89,14 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
 
     date_time = datetime.datetime(year, month, day, hour, minute, second)
 
-    photo_req = PhotoReq(int(photo_id), date_time, int(camera_id))
+    photo_req = PhotoReq(int(photo_id), date_time, int(camera_id), False)
     #Check if object already exists in request list.
     if len(request_list) == 0:
         request_list.append(photo_req)
     else:
         if all(request._id != photo_req._id for request in request_list):
             request_list.append(photo_req)
-            
+
         for request in request_list:
             
             if not(request._id == photo_req._id and request._date == photo_req._date \
@@ -104,9 +111,8 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
             
             else:
                 pass
-
+    
     request_list.sort(key=operator.attrgetter('_date'))
-    print(request_list)
     
     
 def main():
