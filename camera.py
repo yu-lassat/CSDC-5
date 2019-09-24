@@ -58,9 +58,12 @@ def write_txt(photo_id: int, is_photo: bool) -> None:
 def try_capture() -> None:
     '''Checks if a picture should be taken every second'''
     #Replace this for loop with priority queue[0]
-    
-    if request_list[0]._date <= datetime.datetime.now():
-        capture(request_list[0]._id)
+    print(request_list[0]._date)
+    if len(request_list) > 0:
+        if request_list[0]._date <= datetime.datetime.now():
+            capture(request_list[0]._id)
+    else: 
+        pass
 
 
 
@@ -81,11 +84,30 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
 
     photo_req = PhotoReq(int(photo_id), date_time, int(camera_id))
     #Check if object already exists in request list.
-    if not any(x._id == photo_req._id for x in request_list):
+    if len(request_list) == 0:
         request_list.append(photo_req)
-        request_list.sort(key=operator.attrgetter('_date'))
     else:
-        pass
+        if all(request._id != photo_req._id for request in request_list):
+            request_list.append(photo_req)
+            
+        for request in request_list:
+            
+            if not(request._id == photo_req._id and request._date == photo_req._date \
+                and request._camera_id == photo_req._camera_id) and request._id == photo_req._id :
+                
+                request_list.remove(request)
+                request_list.append(photo_req)
+                
+            elif request._id == photo_req._id and request._date == photo_req._date \
+                and request._camera_id == photo_req._camera_id:
+                pass
+            
+            else:
+                pass
+
+    request_list.sort(key=operator.attrgetter('_date'))
+    print(request_list)
+    
     
 def main():
     read_txt()
@@ -94,10 +116,3 @@ def main():
     threading.Timer(1.0, main).start()
 
 main()
-
-        
-
-
-
-
-
