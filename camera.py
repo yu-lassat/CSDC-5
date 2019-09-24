@@ -64,9 +64,7 @@ def try_capture() -> None:
     if request_list[0]._date <= datetime.datetime.now():
         capture(request_list[0]._id)
 
-def thread_callback():
-    read_txt()
-    try_capture()
+
 
 def build_photo_request(photo_id: str, time: str, camera_id: str):
     date, _time = time.split('T')
@@ -90,6 +88,11 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
         request_list.sort(key=operator.attrgetter('_date'))
     else:
         pass
+
+def thread_callback():
+    read_txt()
+    time.sleep(0.5)
+    try_capture()
     
 if __name__ == "__main__":
     threading.Timer(1.0, thread_callback).start()
