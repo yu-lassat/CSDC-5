@@ -32,10 +32,6 @@ def capture(request: PhotoReq) -> None:
 
     write_txt(request._id, is_photo= True)
 
-    
-    
-                    
-
 def read_input() -> None: 
     '''
     Opens the to_python.txt file. To be executed every second.
@@ -43,8 +39,13 @@ def read_input() -> None:
     file = open("to_python.txt", "r")
     contents = file.read()
     contents.strip()
-    #check for invalid data : try/ except ?? what do in except
-    photo_id, time, camera_index = contents.split(',')
+
+    try:
+        photo_id, time, camera_index = contents.split(',')
+    except:
+        print('Invalid input')
+        raise ValueError
+
     file.close()
 
     build_photo_request(photo_id, time, camera_index)
@@ -85,34 +86,33 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
     minute = int(_time[1])
     second = int(_time[2].split('.')[0])
 
-    #better name
     photo_time = datetime.datetime(year, month, day, hour, minute, second)
 
     #Ensure photo id and camera id are > 0. Look into unsigned ints.
-    photo_req = PhotoReq(int(photo_id), photo_time, int(camera_id), False)
+    if int(photo_id) >= 0 and int(camera_id) >=0:
+        photo_req = PhotoReq(int(photo_id), photo_time, int(camera_id))
+        add_req_to_list(photo_req)
+    else:
+        raise ValueError
     
-    #This should be its own method.
-    
-    #Check if object already exists in request list.
+
+def add_req_to_list(photo_req: PhotoReq):   
     if len(request_list) == 0:
         request_list.append(photo_req)
     else:
-        if all(request._id != photo_req._id for request in request_list):
-            request_list.append(photo_req)
-
+        id_check_counter = 0
         for request in request_list:
-            #Make a predicate function and call it in first pass of request_list
-            if not(request._date == photo_req._date \
-                and request._camera_id == photo_req._camera_id) and request._id == photo_req._id :
-                
-                request_list.remove(request)
-                request_list.append(photo_req)
-                
+            if (request._id != photo_req._id):
+                id_check_counter += 1
+                if id_check_counter == len(request_list):
+                    request_list.append(photo_req) 
+            elif request.same_id_diff_time_or_camera(photo_req):
+                request_list.remove(request) 
+                request_list.append(photo_req) 
             else:
                 pass
-    
     request_list.sort(key=operator.attrgetter('_date'))
-    
+
     
 def timer_callback():
     read_input()
