@@ -6,22 +6,22 @@ import time
 import operator
 from PhotoReq import PhotoReq
 
-#Replace this with priority queue
 request_list = []
 complete_list = []
 
 def capture(photo_id: int) -> None:
     '''Capture an image using the raspberry pi camera. Will not work unless picamera module installed.'''
 
-    #Initialize Camera
-    '''camera = PiCamera()'''
+    '''camera = PiCamera()
 
-    #Adjust flip of camera if necessary.
-    '''camera.vflip = True #Flips vertically
-    camera.hflip = True #Flips horizontally'''
-
-    #Save image to file path specified as argument to capture.
-    '''camera.capture(f'foo/bar/{photo_id}.jpg')'''
+        try:
+            camera.start_preview()
+            camera.capture(f'home/pi/Desktop/image_{photo_id}.jpg')
+    
+        finally:
+            camera.stop_preview()
+            camera.close()
+    '''
     for request in request_list:
         if request._id == photo_id and request._is_complete == False:
             request._is_complete = True
