@@ -2,8 +2,8 @@ import datetime
 
 
 class PhotoReq:
-    def __init__(self, id: int, date: datetime.datetime, camera_id: int):
-        self.id = id
+    def __init__(self, id_: int, date: datetime.datetime, camera_id: int):
+        self.id = id_
         self.date = date
         self.camera_id = camera_id
         self.is_complete = False
