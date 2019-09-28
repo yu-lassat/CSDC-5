@@ -7,7 +7,7 @@ import threading
 import time
 
 from PhotoReq import PhotoReq
-from comms import Comms
+from comms import comms
 from config import Conf
 from enums import MessageTypeOut
 
@@ -36,7 +36,7 @@ def capture(request: PhotoReq) -> None:
 
     request.is_complete = True
 
-    Comms.write(MessageTypeOut.PhotoTaken, req_id=request.id)
+    comms.write(MessageTypeOut.PhotoTaken, req_id=request.id)
 
 
 def read_input() -> None:
@@ -58,7 +58,7 @@ def read_input() -> None:
 
     build_photo_request(photo_id, time_, camera_index)
     # TODO Get a object back from build_photo_request to use to get photo_id
-    Comms.write(MessageTypeOut.ConfirmRequestReceived, req_id=int(photo_id))
+    comms.write(MessageTypeOut.ConfirmRequestReceived, req_id=int(photo_id))
 
 
 def try_capture() -> None:

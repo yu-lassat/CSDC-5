@@ -31,3 +31,6 @@ class Comms:
             print(f"Recorded {req_id}.jpg")
         file.close()
         # TODO Add error checking (Must decide what action to take on errors)
+
+
+comms = Comms.get_instance()
