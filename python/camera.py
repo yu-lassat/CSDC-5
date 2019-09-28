@@ -1,4 +1,4 @@
-#from picamera import PiCamera
+# from picamera import PiCamera
 import threading
 from typing import Dict
 import datetime
@@ -6,15 +6,17 @@ import time
 import operator
 from PhotoReq import PhotoReq
 
-#Look into better data structure. Ordered set? Hash map? Set queue? 
+# Look into better data structure. Ordered set? Hash map? Set queue?
 request_list = []
-#id_set = set() #Maybe create set to store ids that have been used. 
-                #Check before adding to request_list
+# id_set = set() #Maybe create set to store ids that have been used.
+# Check before adding to request_list
 complete_list = []
 
-#Look into async library / separate thread for capture.
+
+# Look into async library / separate thread for capture.
 def capture(request: PhotoReq) -> None:
-    '''Capture an image using the raspberry pi camera. Will not work unless picamera module installed.'''
+    '''Capture an image using the raspberry pi camera. Will not work unless
+    picamera module installed.'''
 
     '''camera = PiCamera()
 
@@ -26,13 +28,14 @@ def capture(request: PhotoReq) -> None:
             camera.stop_preview()
             camera.close()
     '''
-    
+
     request._is_complete = True
     complete_list.append(request)
 
-    write_txt(request._id, is_photo= True)
+    write_txt(request._id, is_photo=True)
 
-def read_input() -> None: 
+
+def read_input() -> None:
     '''
     Opens the to_python.txt file. To be executed every second.
     '''
@@ -51,9 +54,9 @@ def read_input() -> None:
     build_photo_request(photo_id, time, camera_index)
     write_txt(int(photo_id), False)
 
-    
+
 def write_txt(photo_id: int, is_photo: bool) -> None:
-    file = open('from_python.txt','w')
+    file = open('from_python.txt', 'w')
     if not is_photo:
         file.write(f"rec {photo_id}")
         print(f"Recorded {photo_id}")
@@ -61,6 +64,7 @@ def write_txt(photo_id: int, is_photo: bool) -> None:
         file.write(f"{photo_id}, {photo_id}.jpg")
         print(f"Recorded {photo_id}.jpg")
     file.close()
+
 
 def try_capture() -> None:
     '''Checks if a picture should be taken, every second'''
@@ -73,7 +77,7 @@ def try_capture() -> None:
 
 
 def build_photo_request(photo_id: str, time: str, camera_id: str):
-    #look into library and clearify timezone issues?
+    # look into library and clearify timezone issues?
     date, _time = time.split('T')
     date.strip()
     _time.strip()
@@ -88,15 +92,15 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
 
     photo_time = datetime.datetime(year, month, day, hour, minute, second)
 
-    #Ensure photo id and camera id are > 0. Look into unsigned ints.
-    if int(photo_id) >= 0 and int(camera_id) >=0:
+    # Ensure photo id and camera id are > 0. Look into unsigned ints.
+    if int(photo_id) >= 0 and int(camera_id) >= 0:
         photo_req = PhotoReq(int(photo_id), photo_time, int(camera_id))
         add_req_to_list(photo_req)
     else:
         raise ValueError
-    
 
-def add_req_to_list(photo_req: PhotoReq):   
+
+def add_req_to_list(photo_req: PhotoReq):
     if len(request_list) == 0:
         request_list.append(photo_req)
     else:
@@ -105,19 +109,20 @@ def add_req_to_list(photo_req: PhotoReq):
             if (request._id != photo_req._id):
                 id_check_counter += 1
                 if id_check_counter == len(request_list):
-                    request_list.append(photo_req) 
+                    request_list.append(photo_req)
             elif request.same_id_diff_time_or_camera(photo_req):
-                request_list.remove(request) 
-                request_list.append(photo_req) 
+                request_list.remove(request)
+                request_list.append(photo_req)
             else:
                 pass
     request_list.sort(key=operator.attrgetter('_date'))
 
-    
+
 def timer_callback():
     read_input()
     time.sleep(1)
     try_capture()
     threading.Timer(1.0, timer_callback).start()
+
 
 timer_callback()
