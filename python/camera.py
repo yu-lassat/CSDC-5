@@ -120,7 +120,7 @@ def add_req_to_list(photo_req: PhotoReq):
                 request_list.append(photo_req)
             else:
                 pass
-    request_list.sort(key=operator.attrgetter('_date'))
+    request_list.sort(key=operator.attrgetter('date'))
 
 
 def timer_callback():
