@@ -2,11 +2,24 @@ from config import Conf
 from enums import MessageTypeOut
 
 
-class Comm:
-    _instance = None
+class Comms:
+    __instance = None
 
     @staticmethod
-    def write(msg_type: MessageTypeOut, *, req_id: int) -> None:
+    def get_instance():
+        """ Static access method. """
+        if Comms.__instance is None:
+            Comms()
+        return Comms.__instance
+
+    def __init__(self):
+        """ Virtually private constructor. """
+        if Comms.__instance is not None:
+            raise Exception("This class is a singleton!")
+        else:
+            Comms.__instance = self
+
+    def write(self, msg_type: MessageTypeOut, *, req_id: int) -> None:
         file = open(Conf.Comm.FILENAME_IN, "w")
         # TODO Change to accommodated all message types except errors which
         # need the exceptions to be setup first
@@ -18,17 +31,3 @@ class Comm:
             print(f"Recorded {req_id}.jpg")
         file.close()
         # TODO Add error checking (Must decide what action to take on errors)
-
-    @staticmethod
-    def _get_inst():
-        """
-        Returns a the instance of the class for internal use. If not
-        created, it will be created before being returned
-        :return: Instance of Comm for internal use
-        """
-        if Comm._instance is None:
-            Comm._instance = Comm()
-        return Comm._instance
-
-    def __init__(self):
-        pass
