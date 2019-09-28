@@ -1,3 +1,5 @@
+# TODO (GoLive) Remove all debugging commands ie. print, asserts
+
 # from picamera import PiCamera
 import datetime
 import operator
@@ -5,9 +7,11 @@ import threading
 import time
 
 from PhotoReq import PhotoReq
+from comm import Comm
+from config import Conf
+from enums import MessageTypeOut
 
-# TODO Look into better data structure. Queue?
-request_list = []
+request_list = []  # TODO Look into better data structure. Queue?
 
 
 # TODO Look into async library / separate thread for capture.
@@ -32,7 +36,7 @@ def capture(request: PhotoReq) -> None:
 
     request.is_complete = True
 
-    write_txt(request.id, is_photo=True)
+    Comm.write(MessageTypeOut.PhotoTaken, req_id=request.id)
 
 
 def read_input() -> None:
@@ -40,7 +44,7 @@ def read_input() -> None:
     Opens the to_python.txt file. To be executed every second.
     :return:
     """
-    file = open("to_python.txt", "r")
+    file = open(Conf.Comm.FILENAME_IN, "r")
     contents = file.read()
     contents.strip()
 
@@ -53,18 +57,8 @@ def read_input() -> None:
     file.close()
 
     build_photo_request(photo_id, time_, camera_index)
-    write_txt(int(photo_id), False)
-
-
-def write_txt(photo_id: int, is_photo: bool) -> None:
-    file = open('from_python.txt', 'w')
-    if not is_photo:
-        file.write(f"rec {photo_id}")
-        print(f"Recorded {photo_id}")
-    else:
-        file.write(f"{photo_id}, {photo_id}.jpg")
-        print(f"Recorded {photo_id}.jpg")
-    file.close()
+    # TODO Get a object back from build_photo_request to use to get photo_id
+    Comm.write(MessageTypeOut.ConfirmRequestReceived, req_id=int(photo_id))
 
 
 def try_capture() -> None:
@@ -76,6 +70,8 @@ def try_capture() -> None:
         for request in request_list:
             if not request.is_complete:
                 if request.date <= datetime.datetime.now():
+                    # TODO Remove request from list so head of list is next
+                    # picture to be taken at all times
                     capture(request)
                     break
 
@@ -123,11 +119,13 @@ def add_req_to_list(photo_req: PhotoReq):
     request_list.sort(key=operator.attrgetter('date'))
 
 
+# TODO Change name to main and change filename to main
 def timer_callback():
     read_input()
-    time.sleep(1)
+    time.sleep(Conf.Main.LOOP_DELAY)
     try_capture()
     threading.Timer(1.0, timer_callback).start()
+    # TODO Change to loop instead of using a callback
 
 
 timer_callback()
