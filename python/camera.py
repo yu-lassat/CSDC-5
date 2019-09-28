@@ -12,19 +12,23 @@ request_list = []
 
 # TODO Look into async library / separate thread for capture.
 def capture(request: PhotoReq) -> None:
-    '''Capture an image using the raspberry pi camera. Will not work unless
-    picamera module installed.'''
+    """
+    Capture an image using the raspberry pi camera. Will not work unless
+    picamera module installed.
 
-    '''camera = PiCamera()
+    :param request:
+    :return:
+    """
 
-        try:
-            camera.start_preview()
-            camera.capture(f'home/pi/Desktop/image_{photo_id}.jpg')
-    
-        finally:
-            camera.stop_preview()
-            camera.close()
-    '''
+    # camera = PiCamera()
+    #
+    # try:
+    #     camera.start_preview()
+    #     camera.capture(f'home/pi/Desktop/image_{photo_id}.jpg')
+    #
+    # finally:
+    #     camera.stop_preview()
+    #     camera.close()
 
     request.is_complete = True
 
@@ -32,9 +36,10 @@ def capture(request: PhotoReq) -> None:
 
 
 def read_input() -> None:
-    '''
+    """
     Opens the to_python.txt file. To be executed every second.
-    '''
+    :return:
+    """
     file = open("to_python.txt", "r")
     contents = file.read()
     contents.strip()
@@ -63,7 +68,10 @@ def write_txt(photo_id: int, is_photo: bool) -> None:
 
 
 def try_capture() -> None:
-    '''Checks if a picture should be taken, every second'''
+    """
+    Checks if a picture should be taken, every second
+    :return:
+    """
     if len(request_list) > 0:
         for request in request_list:
             if not request.is_complete:
