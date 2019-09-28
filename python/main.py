@@ -3,7 +3,6 @@
 # from picamera import PiCamera
 import datetime
 import operator
-import threading
 import time
 
 from PhotoReq import PhotoReq
@@ -121,13 +120,12 @@ def add_req_to_list(photo_req: PhotoReq):
     request_list.sort(key=operator.attrgetter('date'))
 
 
-# TODO Change name to main and change filename to main
-def timer_callback():
-    read_input()
-    time.sleep(Conf.Main.LOOP_DELAY)
-    try_capture()
-    threading.Timer(1.0, timer_callback).start()
-    # TODO Change to loop instead of using a callback
+def main():
+    while True:
+        read_input()
+        try_capture()
+        time.sleep(Conf.Main.LOOP_DELAY)
 
 
-timer_callback()
+if __name__ == '__main__':
+    main()
