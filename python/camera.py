@@ -45,14 +45,14 @@ def read_input() -> None:
     contents.strip()
 
     try:
-        photo_id, time, camera_index = contents.split(',')
-    except:
+        photo_id, time_, camera_index = contents.split(',')
+    except Exception:
         print('Invalid input')
         raise ValueError
 
     file.close()
 
-    build_photo_request(photo_id, time, camera_index)
+    build_photo_request(photo_id, time_, camera_index)
     write_txt(int(photo_id), False)
 
 
