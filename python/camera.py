@@ -1,9 +1,9 @@
 # from picamera import PiCamera
-import threading
-from typing import Dict
 import datetime
-import time
 import operator
+import threading
+import time
+
 from PhotoReq import PhotoReq
 
 # Look into better data structure. Ordered set? Hash map? Set queue?
@@ -29,10 +29,10 @@ def capture(request: PhotoReq) -> None:
             camera.close()
     '''
 
-    request._is_complete = True
+    request.is_complete = True
     complete_list.append(request)
 
-    write_txt(request._id, is_photo=True)
+    write_txt(request.id, is_photo=True)
 
 
 def read_input() -> None:
@@ -106,7 +106,7 @@ def add_req_to_list(photo_req: PhotoReq):
     else:
         id_check_counter = 0
         for request in request_list:
-            if (request._id != photo_req._id):
+            if (request._id != photo_req.id):
                 id_check_counter += 1
                 if id_check_counter == len(request_list):
                     request_list.append(photo_req)
