@@ -66,8 +66,8 @@ def try_capture() -> None:
     '''Checks if a picture should be taken, every second'''
     if len(request_list) > 0:
         for request in request_list:
-            if not request._is_complete:
-                if request._date <= datetime.datetime.now():
+            if not request.is_complete:
+                if request.date <= datetime.datetime.now():
                     capture(request)
                     break
 
@@ -103,7 +103,7 @@ def add_req_to_list(photo_req: PhotoReq):
     else:
         id_check_counter = 0
         for request in request_list:
-            if (request._id != photo_req.id):
+            if request.id != photo_req.id:
                 id_check_counter += 1
                 if id_check_counter == len(request_list):
                     request_list.append(photo_req)
