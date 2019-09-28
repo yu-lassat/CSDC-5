@@ -18,6 +18,7 @@ class Comms:
             raise Exception("This class is a singleton!")
         else:
             Comms.__instance = self
+            self.last_read = ""
 
     def write(self, msg_type: MessageTypeOut, *, req_id: int) -> None:
         file = open(Conf.Comm.FILENAME_IN, "w")
@@ -31,6 +32,20 @@ class Comms:
             print(f"Recorded {req_id}.jpg")
         file.close()
         # TODO Add error checking (Must decide what action to take on errors)
+
+    def read(self) -> (str, None):
+        """
+        Checks incoming message and returns message if new else None
+        :return: Incoming Message if new otherwise None
+        """
+        file = open(Conf.Comm.FILENAME_IN, "r")
+        contents = file.read()
+        # TODO Add exception handling
+        file.close()
+        if contents != self.last_read:
+            return contents
+        else:
+            return None
 
 
 comms = Comms.get_instance()

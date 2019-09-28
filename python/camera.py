@@ -44,8 +44,11 @@ def read_input() -> None:
     Opens the to_python.txt file. To be executed every second.
     :return:
     """
-    file = open(Conf.Comm.FILENAME_IN, "r")
-    contents = file.read()
+    contents = comms.read()
+
+    if contents is None:
+        return
+
     contents.strip()
 
     try:
@@ -54,13 +57,12 @@ def read_input() -> None:
         print('Invalid input')
         raise ValueError
 
-    file.close()
-
     build_photo_request(photo_id, time_, camera_index)
     # TODO Get a object back from build_photo_request to use to get photo_id
     comms.write(MessageTypeOut.ConfirmRequestReceived, req_id=int(photo_id))
 
 
+# TODO Review name to decide if something like check_list may be more suitable
 def try_capture() -> None:
     """
     Checks if a picture should be taken, every second
