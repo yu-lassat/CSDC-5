@@ -6,14 +6,14 @@ import time
 
 from PhotoReq import PhotoReq
 
-# Look into better data structure. Ordered set? Hash map? Set queue?
+# TODO Look into better data structure. Queue?
 request_list = []
 # id_set = set() #Maybe create set to store ids that have been used.
 # Check before adding to request_list
 complete_list = []
 
 
-# Look into async library / separate thread for capture.
+# TODO Look into async library / separate thread for capture.
 def capture(request: PhotoReq) -> None:
     '''Capture an image using the raspberry pi camera. Will not work unless
     picamera module installed.'''
@@ -76,9 +76,9 @@ def try_capture() -> None:
                     break
 
 
-def build_photo_request(photo_id: str, time: str, camera_id: str):
-    # look into library and clearify timezone issues?
-    date, _time = time.split('T')
+def build_photo_request(photo_id: str, time_: str, camera_id: str):
+    # TODO look into library (and clarify timezone issues <UTC Will be used>)
+    date, _time = time_.split('T')
     date.strip()
     _time.strip()
     date = date.split('-')
@@ -92,7 +92,8 @@ def build_photo_request(photo_id: str, time: str, camera_id: str):
 
     photo_time = datetime.datetime(year, month, day, hour, minute, second)
 
-    # Ensure photo id and camera id are > 0. Look into unsigned ints.
+    # Ensure photo id and camera id are > 0
+    # TODO Look into unsigned ints.
     if int(photo_id) >= 0 and int(camera_id) >= 0:
         photo_req = PhotoReq(int(photo_id), photo_time, int(camera_id))
         add_req_to_list(photo_req)
