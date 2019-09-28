@@ -8,9 +8,6 @@ from PhotoReq import PhotoReq
 
 # TODO Look into better data structure. Queue?
 request_list = []
-# id_set = set() #Maybe create set to store ids that have been used.
-# Check before adding to request_list
-complete_list = []
 
 
 # TODO Look into async library / separate thread for capture.
@@ -30,7 +27,6 @@ def capture(request: PhotoReq) -> None:
     '''
 
     request.is_complete = True
-    complete_list.append(request)
 
     write_txt(request.id, is_photo=True)
 
