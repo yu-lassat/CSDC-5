@@ -21,7 +21,7 @@ class Comms:
             self.last_read = ""
 
     def write(self, msg_type: MessageTypeOut, *, req_id: int) -> None:
-        file = open(Conf.Comm.FILENAME_IN, "w")
+        file = open(Conf.Comm.FILENAME_OUT, "w")
         # TODO Change to accommodated all message types except errors which
         # need the exceptions to be setup first
         if not msg_type == MessageTypeOut.PhotoTaken:
