@@ -11,6 +11,6 @@
  * Returns a string joing the two strings passed unless both are NULL or
  * unable to allocate memory, then NULL shall be returned.
  */
-char * concatenate_chars(const char*, const char*);
+char * ConcatenateChars(const char*, const char*);
 // ---------------------------------------------------------------------------
 #endif

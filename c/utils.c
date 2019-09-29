@@ -1,6 +1,6 @@
 #include "utils.h"
 
-char * concatenate_chars(const char *str1, const char *str2) {
+char * ConcatenateChars(const char *str1, const char *str2) {
     // Based on https://stackoverflow.com/questions/36437461/safe-way-to-concat-two-strings-in-c
     /* TODO 4 -cTesting : Test method for NULL parameters */
     char *result = NULL;
