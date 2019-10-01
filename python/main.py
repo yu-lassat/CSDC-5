@@ -89,9 +89,12 @@ def build_photo_request(photo_id: str, time_: str, camera_id: str):
     day = int(date[2])
     hour = int(_time[0])
     minute = int(_time[1])
-    second = int(_time[2].split('.')[0])
+    _time = _time[2].split('.')  # Store seconds and milliseconds for split
+    second = int(_time[0])
+    m_second = int(_time[1])
 
-    photo_time = datetime.datetime(year, month, day, hour, minute, second)
+    photo_time = datetime.datetime(
+        year, month, day, hour, minute, second, m_second)
 
     # Ensure photo id and camera id are > 0
     # TODO Look into unsigned ints.
