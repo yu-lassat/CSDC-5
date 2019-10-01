@@ -70,7 +70,7 @@ def try_capture() -> None:
     if len(request_list) > 0:
         for request in request_list:
             if not request.is_complete:
-                if request.date <= datetime.datetime.now():
+                if request.datetime <= datetime.datetime.now():
                     # TODO Remove request from list so head of list is next
                     # picture to be taken at all times
                     capture(request)
@@ -93,13 +93,13 @@ def build_photo_request(photo_id: str, time_: str, camera_id: str):
     second = int(_time[0])
     m_second = int(_time[1])
 
-    photo_time = datetime.datetime(
+    photo_datetime = datetime.datetime(
         year, month, day, hour, minute, second, m_second)
 
     # Ensure photo id and camera id are > 0
     # TODO Look into unsigned ints.
     if int(photo_id) >= 0 and int(camera_id) >= 0:
-        photo_req = PhotoReq(int(photo_id), photo_time, int(camera_id))
+        photo_req = PhotoReq(int(photo_id), photo_datetime, int(camera_id))
         add_req_to_list(photo_req)
     else:
         raise ValueError
@@ -120,7 +120,7 @@ def add_req_to_list(photo_req: PhotoReq):
                 request_list.append(photo_req)
             else:
                 pass
-    request_list.sort(key=operator.attrgetter('date'))
+    request_list.sort(key=operator.attrgetter('datetime'))
 
 
 def main():
