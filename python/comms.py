@@ -43,6 +43,7 @@ class Comms:
         # TODO Add exception handling
         file.close()
         if contents != self.last_read:
+            self.last_read = contents
             return contents
         else:
             return None
