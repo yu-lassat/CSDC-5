@@ -1,6 +1,5 @@
 # TODO (GoLive) Remove all debugging commands ie. print, asserts
 
-# from picamera import PiCamera
 import datetime
 import operator
 import time
@@ -9,6 +8,9 @@ from PhotoReq import PhotoReq
 from comms import comms
 from config import Conf
 from enums import MessageTypeOut
+
+if Conf.Camera.ENABLED:
+    from picamera import PiCamera
 
 request_list = []  # TODO Look into better data structure. Queue?
 
@@ -23,15 +25,14 @@ def capture(request: PhotoReq) -> None:
     :return:
     """
 
-    # camera = PiCamera()
-    #
-    # try:
-    #     camera.start_preview()
-    #     camera.capture(f'home/pi/Desktop/image_{photo_id}.jpg')
-    #
-    # finally:
-    #     camera.stop_preview()
-    #     camera.close()
+    if Conf.Camera.ENABLED:
+        camera = PiCamera()
+        try:
+            camera.start_preview()
+            camera.capture(f'home/pi/Desktop/image_{request.id}.jpg')
+        finally:
+            camera.stop_preview()
+            camera.close()
 
     request.is_complete = True
 

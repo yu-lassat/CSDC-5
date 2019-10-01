@@ -1,4 +1,7 @@
 class Conf:
+    class Camera:
+        ENABLED = False
+
     class Main:
         LOOP_DELAY = 1
 
