@@ -1,5 +1,7 @@
 class Conf:
     class Camera:
+        PHOTO_LOCATION_AND_PREFIX = 'images/img'
+        PHOTO_EXTENSION = '.jpg'
         ENABLED = False
         PHOTO_DELAY = 2
 
