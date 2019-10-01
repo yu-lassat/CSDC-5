@@ -1,6 +1,7 @@
 class Conf:
     class Camera:
         ENABLED = False
+        PHOTO_DELAY = 2
 
     class Main:
         LOOP_DELAY = 1

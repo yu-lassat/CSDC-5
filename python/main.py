@@ -29,6 +29,7 @@ def capture(request: PhotoReq) -> None:
         camera = PiCamera()
         try:
             camera.start_preview()
+            time.sleep(Conf.Camera.PHOTO_DELAY)
             camera.capture(f'home/pi/Desktop/image_{request.id}.jpg')
         finally:
             camera.stop_preview()
